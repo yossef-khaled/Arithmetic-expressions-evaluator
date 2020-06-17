@@ -19,9 +19,9 @@ namespace Parser
                     if(token.Kind == SyntaxKind.EndOfFileToken)
                         break;
                     
-                    Console.Write($"{token.Kind}: {token.Text}");
+                    Console.Write($"{token.Kind}: '{token.Text}' ");
                     if(token.Value != null)
-                        Console.WriteLine($"{token.Value}");
+                        Console.WriteLine($" {token.Value}");
 
                     Console.WriteLine();
                 } 
@@ -97,7 +97,7 @@ namespace Parser
                 }
 
                 var length = _position - start;
-                var text = _text.Substring(start, _position);
+                var text = _text.Substring(start, length);
                 int.TryParse(text, out var value);
                 return new SyntaxToken(SyntaxKind.NumberToken, start, text, value);
             }
@@ -110,7 +110,7 @@ namespace Parser
                 }
 
                 var length = _position - start;
-                var text = _text.Substring(start, _position);
+                var text = _text.Substring(start, length);
                 int.TryParse(text, out var value);
                 return new SyntaxToken(SyntaxKind.WhitespaceToken, start, text, value);
             }
@@ -127,13 +127,13 @@ namespace Parser
             if(Current == '-')
                 return new SyntaxToken(SyntaxKind.MinusToken, _position++, "-", null);
             else if(Current == '*')
-                return new SyntaxToken(SyntaxKind.MultiplyToken, _position++, "-", null); 
+                return new SyntaxToken(SyntaxKind.MultiplyToken, _position++, "*", null); 
             else if(Current == '/')
-                return new SyntaxToken(SyntaxKind.DivideToken, _position++, "-", null);
+                return new SyntaxToken(SyntaxKind.DivideToken, _position++, "/", null);
             else if(Current == '(')
-                return new SyntaxToken(SyntaxKind.OpenParenthesisToken, _position++, "-", null);
+                return new SyntaxToken(SyntaxKind.OpenParenthesisToken, _position++, "(", null);
             else if(Current == ')')
-                return new SyntaxToken(SyntaxKind.CloseParenthesisToken, _position++, "-", null);
+                return new SyntaxToken(SyntaxKind.CloseParenthesisToken, _position++, ")", null);
             
             return new SyntaxToken(SyntaxKind.BadToken, _position++, _text.Substring(_position - 1, 1), null);
         }
