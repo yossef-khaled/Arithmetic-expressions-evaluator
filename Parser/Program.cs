@@ -170,6 +170,8 @@ namespace Parser
             
             return _tokens[index];
         }
+
+        private SyntaxToken Current => Peek(0);
     }
 
 
