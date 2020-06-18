@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace Parser
 {
@@ -111,8 +112,7 @@ namespace Parser
 
                 var length = _position - start;
                 var text = _text.Substring(start, length);
-                int.TryParse(text, out var value);
-                return new SyntaxToken(SyntaxKind.WhitespaceToken, start, text, value);
+                return new SyntaxToken(SyntaxKind.WhitespaceToken, start, text, null);
             }
 
             
@@ -138,4 +138,39 @@ namespace Parser
             return new SyntaxToken(SyntaxKind.BadToken, _position++, _text.Substring(_position - 1, 1), null);
         }
     }
+    
+    class Parser {
+
+        private readonly SyntaxToken[] _tokens;
+        private int _position;
+        public Parser(string text){
+            
+            var tokens = new List<SyntaxToken>();
+            var lexer = new Lexer(text);
+            SyntaxToken token;
+            
+            do {
+                token = lexer.NextToken();
+
+                if(token.Kind != SyntaxKind.WhitespaceToken && 
+                   token.Kind != SyntaxKind.BadToken)
+                {
+                    tokens.Add(token);
+                }
+
+            } while(token.Kind != SyntaxKind.EndOfFileToken);  
+
+            _tokens = tokens.ToArray();
+        }
+
+        private SyntaxToken Peek(int offset) {
+            var index = _position + offset;
+            if(index >= _tokens.Length)
+                return _tokens[_position - 1];
+            
+            return _tokens[index];
+        }
+    }
+
+
 }
