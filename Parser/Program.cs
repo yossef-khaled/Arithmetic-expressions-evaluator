@@ -3,6 +3,16 @@ using System.Collections.Generic;
 
 namespace Parser
 {
+    // 1 + 2 + 3
+    // the tree will look like :
+    //      +
+    //     / \
+    //    +   3
+    //   / \
+    //  1   2
+    //
+
+
     class Program
     {
         static void Main(string[] args)
@@ -40,7 +50,9 @@ namespace Parser
         OpenParenthesisToken,
         CloseParenthesisToken,
         BadToken,
-        EndOfFileToken
+        EndOfFileToken,
+        NumberExpression,
+        BinaryExpression
     }
 
     class SyntaxToken{
@@ -139,6 +151,38 @@ namespace Parser
         }
     }
     
+    abstract class SyntaxNode {
+        public abstract SyntaxKind Kind {get;}
+    }
+
+    abstract class ExpressionSyntax : SyntaxNode {
+
+    }
+
+    sealed class NumberExpressionSyntax : ExpressionSyntax {
+        public NumberExpressionSyntax(SyntaxKind numberToken){
+            NumberToken = numberToken;
+        }
+
+        public override SyntaxKind Kind => SyntaxKind.NumberExpression;
+        public SyntaxKind NumberToken {get;} 
+    }
+
+    //For operators
+    sealed class BinaryExpressionSyntax : ExpressionSyntax {
+        public BinaryExpressionSyntax(ExpressionSyntax left, SyntaxNode operatorToken, ExpressionSyntax right){
+            Left = left;
+            OperatorToken = operatorToken;
+            Right = right;
+        }
+
+        public override SyntaxKind Kind => SyntaxKind.BinaryExpression;
+        public ExpressionSyntax Left {get;}
+        public SyntaxNode OperatorToken {get;}
+        public ExpressionSyntax Right {get;}
+        
+    }
+
     class Parser {
 
         private readonly SyntaxToken[] _tokens;
