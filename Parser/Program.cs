@@ -5,7 +5,7 @@ using System.Linq;
 namespace Parser
 {
     // 1 + 2 + 3
-    // the tree will look like :
+    // the tree from the parse function will look like :
     //      +
     //     / \
     //    +   3
@@ -25,6 +25,11 @@ namespace Parser
                     return;
                 }
 
+                var parser = new Parser(line);
+                var expression = parser.Parse();
+
+                PrettyPrint(expression);
+
                 var lexer = new Lexer(line);
                 while(true){
                     var token = lexer.NextToken();
@@ -38,6 +43,23 @@ namespace Parser
                     Console.WriteLine();
                 } 
             }
+        }
+
+        static void PrettyPrint(SyntaxNode node, string indent = ""){
+            Console.Write(indent);
+            Console.Write(node.Kind);
+
+            if(node is SyntaxToken t && t.Value != null){
+                Console.Write(" ");
+                Console.Write(t.Value);
+            }
+
+            Console.WriteLine();
+
+            indent += "    ";
+
+            foreach(var child in node.GetChildren())
+                PrettyPrint(child, indent);
         }
     }
 
@@ -247,13 +269,14 @@ namespace Parser
             return new SyntaxToken(Kind, Current.Position, null, null);
         }
 
+        //Return the tokens as a tree
         public ExpressionSyntax Parse(){
 
-        //      +
-        //     / \
-        //    +   3
-        //   / \
-        //  1   2
+            //      +
+            //     / \
+            //    +   3
+            //   / \
+            //  1   2
             
             var left = ParsePrimaryExpression();
 
