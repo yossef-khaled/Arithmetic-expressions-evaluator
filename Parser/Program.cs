@@ -55,7 +55,7 @@ namespace Parser
                         Console.WriteLine($" {token.Value}");
                     
                     Console.WriteLine();
-                } 
+                }
             }
         }
 
@@ -117,6 +117,7 @@ namespace Parser
         private List<string> _diagnostics = new List<string>();
         public Lexer(String text){
             _text = text;
+            _diagnostics.Add("Hello World");
         }
 
         public IEnumerable<string> Diagnostics => _diagnostics;
@@ -194,7 +195,6 @@ namespace Parser
             else if(Current == ')')
                 return new SyntaxToken(SyntaxKind.CloseParenthesisToken, _position++, ")", null);
             
-            Console.WriteLine("Error!!!!");
             _diagnostics.Add($"Error: bad chracter input: '{Current}'.");   
             return new SyntaxToken(SyntaxKind.BadToken, _position++, _text.Substring(_position - 1, 1), null);
             
@@ -324,7 +324,9 @@ namespace Parser
             var left = ParsePrimaryExpression();
 
             while (Current.Kind == SyntaxKind.PlusToken ||
-                   Current.Kind == SyntaxKind.MinusToken)
+                   Current.Kind == SyntaxKind.MinusToken ||
+                   Current.Kind == SyntaxKind.MultiplyToken ||
+                   Current.Kind == SyntaxKind.DivideToken)
             {
                 var operatorToken = NextToken();
                 var right = ParsePrimaryExpression();
