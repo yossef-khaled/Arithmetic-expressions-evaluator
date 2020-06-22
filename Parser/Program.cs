@@ -30,9 +30,9 @@ namespace Parser
                 var color = Console.ForegroundColor;
                 PrettyPrint(syntaxTree.Root);
 
-                if(!syntaxTree.Diagnostics.Any()){
+                if(!parser.Diagnostics.Any()){
                     var e = new Evaluator(syntaxTree.Root);
-                    int result = e.Evaluate();
+                    float result = e.Evaluate();
                     Console.WriteLine(result);
                 }
                 else{
@@ -117,7 +117,6 @@ namespace Parser
         private List<string> _diagnostics = new List<string>();
         public Lexer(String text){
             _text = text;
-            _diagnostics.Add("Hello World");
         }
 
         public IEnumerable<string> Diagnostics => _diagnostics;
@@ -155,7 +154,7 @@ namespace Parser
 
                 var length = _position - start;
                 var text = _text.Substring(start, length);
-                if(!int.TryParse(text, out var value)){
+                if(!int.TryParse(text, out var value)){ 
                     _diagnostics.Add($"The number {_text} isn't a valid Int32");
                     return new SyntaxToken(SyntaxKind.BadToken, start, text, value);
                 }
@@ -195,7 +194,7 @@ namespace Parser
             else if(Current == ')')
                 return new SyntaxToken(SyntaxKind.CloseParenthesisToken, _position++, ")", null);
             
-            _diagnostics.Add($"Error: bad chracter input: '{Current}'.");   
+            _diagnostics.Add($"Error: bad chracter input: '{Current}'.");
             return new SyntaxToken(SyntaxKind.BadToken, _position++, _text.Substring(_position - 1, 1), null);
             
         }
@@ -309,23 +308,38 @@ namespace Parser
             return new SyntaxToken(kind, Current.Position, null, null);
         }
 
+        private ExpressionSyntax ParserExpression(){
+            return ParseAddition();
+        }
+
         //Return the tokens as a tree
         public SyntaxTree Parse(){
-            var expression = ParseExpression();
+            var expression = ParseAddition();
             var endOfFileToken = Match(SyntaxKind.EndOfFileToken);
             return new SyntaxTree(_diagnostics, expression, endOfFileToken);
         }
-        public ExpressionSyntax ParseExpression(){
+        public ExpressionSyntax ParseAddition(){
             //      +
             //     / \
             //    +   3
             //   / \
             //  1   2            
-            var left = ParsePrimaryExpression();
+            var left = ParseMultiplication();
 
             while (Current.Kind == SyntaxKind.PlusToken ||
-                   Current.Kind == SyntaxKind.MinusToken ||
-                   Current.Kind == SyntaxKind.MultiplyToken ||
+                   Current.Kind == SyntaxKind.MinusToken)
+            {
+                var operatorToken = NextToken();
+                var right = ParseMultiplication();
+                left = new BinaryExpressionSyntax(left, operatorToken, right);
+            }
+
+            return left;    
+        }
+        public ExpressionSyntax ParseMultiplication(){       
+            var left = ParsePrimaryExpression();
+
+            while (Current.Kind == SyntaxKind.MultiplyToken ||
                    Current.Kind == SyntaxKind.DivideToken)
             {
                 var operatorToken = NextToken();
@@ -335,7 +349,6 @@ namespace Parser
 
             return left;    
         }
-        
 
         private ExpressionSyntax ParsePrimaryExpression(){
             var numberToken = Match(SyntaxKind.NumberToken);
@@ -350,11 +363,11 @@ namespace Parser
             this._root = root;
         }
 
-        public int Evaluate(){
+        public float Evaluate(){
             return EvaluateExpression(_root); 
         }
 
-        private int EvaluateExpression(ExpressionSyntax node){
+        private float EvaluateExpression(ExpressionSyntax node){
             // We have (until now):
             // BinaryExpresion, NumberExpression
 
