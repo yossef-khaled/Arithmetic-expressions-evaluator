@@ -4,15 +4,24 @@ using System.Linq;
 
 namespace Parser
 {
-    // 1 + 2 + 3
     // the tree from the parse function will look like :
+    // (1 + 2) * 3
+    //            (
+    //         /     \
+    //        +       )
+    //       / \     /
+    //      1   2   *
+    //             / 
+    //            3
+    //_____________________________________________________ or :
+    //
+    // 1 + 2 + 3
     //      +
     //     / \
     //    +   3
     //   / \
     //  1   2
     //
-
 
     class Program
     {
@@ -89,7 +98,8 @@ namespace Parser
         BadToken,
         EndOfFileToken,
         NumberExpression,
-        BinaryExpression
+        BinaryExpression,
+        ParenthesizedExpression
     }
 
     class SyntaxToken : SyntaxNode{
@@ -245,6 +255,26 @@ namespace Parser
         
     }
 
+
+    sealed class ParenthesizedExpressionSyntax : ExpressionSyntax {
+        public ParenthesizedExpressionSyntax(SyntaxToken openParenthesisToken, ExpressionSyntax expression, SyntaxToken closeParenthesisToken){
+            OpenParenthesisToken = openParenthesisToken;
+            Expression = expression;
+            CloseParenthesisToken = closeParenthesisToken;
+        }
+
+        public SyntaxToken OpenParenthesisToken {get;}
+        public ExpressionSyntax Expression {get;}
+        public SyntaxToken CloseParenthesisToken {get;}
+
+        public override SyntaxKind Kind => SyntaxKind.ParenthesizedExpression;
+        
+        public override IEnumerable<SyntaxNode> GetChildren(){
+            yield return OpenParenthesisToken;
+            yield return Expression;
+            yield return CloseParenthesisToken;
+        } 
+    }
     sealed class SyntaxTree{
         public SyntaxTree(IEnumerable<string> diagnostocs, ExpressionSyntax root, SyntaxToken endOfFileToken){
             Diagnostics = diagnostocs.ToArray();
@@ -308,35 +338,32 @@ namespace Parser
             return new SyntaxToken(kind, Current.Position, null, null);
         }
 
-        private ExpressionSyntax ParserExpression(){
-            return ParseAddition();
-        }
 
         //Return the tokens as a tree
         public SyntaxTree Parse(){
-            var expression = ParseAddition();
+            var expression = ParseTerm();
             var endOfFileToken = Match(SyntaxKind.EndOfFileToken);
             return new SyntaxTree(_diagnostics, expression, endOfFileToken);
         }
-        public ExpressionSyntax ParseAddition(){
+        public ExpressionSyntax ParseTerm(){
             //      +
-            //     / \
+            //     / \  
             //    +   3
             //   / \
             //  1   2            
-            var left = ParseMultiplication();
+            var left = ParseOperation();
 
             while (Current.Kind == SyntaxKind.PlusToken ||
                    Current.Kind == SyntaxKind.MinusToken)
             {
                 var operatorToken = NextToken();
-                var right = ParseMultiplication();
+                var right = ParseOperation();
                 left = new BinaryExpressionSyntax(left, operatorToken, right);
             }
 
             return left;    
         }
-        public ExpressionSyntax ParseMultiplication(){       
+        public ExpressionSyntax ParseOperation(){       
             var left = ParsePrimaryExpression();
 
             while (Current.Kind == SyntaxKind.MultiplyToken ||
@@ -351,6 +378,13 @@ namespace Parser
         }
 
         private ExpressionSyntax ParsePrimaryExpression(){
+            if(Current.Kind == SyntaxKind.OpenParenthesisToken){
+                var left = NextToken();
+                var expression = ParseTerm();
+                var right = Match(SyntaxKind.CloseParenthesisToken);
+                return new ParenthesizedExpressionSyntax(left, expression, right); 
+            }
+
             var numberToken = Match(SyntaxKind.NumberToken);
             return new NumberExpressionSyntax(numberToken);                
         }
@@ -393,6 +427,10 @@ namespace Parser
                 }
                 else
                     throw new Exception($"Unexpected binary operator: {b.OperatorToken.Kind}");
+            }
+
+            if(node is ParenthesizedExpressionSyntax p){
+                return EvaluateExpression(p.Expression);
             }
             throw new Exception($"Unexpected node: {node.Kind}");
         }
