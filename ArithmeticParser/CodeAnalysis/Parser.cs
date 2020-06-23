@@ -66,19 +66,19 @@ class Parser {
         //    +   3
         //   / \
         //  1   2            
-        var left = ParseOperation();
+        var left = ParseFactor();
 
         while (Current.Kind == SyntaxKind.PlusToken ||
                Current.Kind == SyntaxKind.MinusToken)
         {
             var operatorToken = NextToken();
-            var right = ParseOperation();
+            var right = ParseFactor();
             left = new BinaryExpressionSyntax(left, operatorToken, right);
         }
 
         return left;    
     }
-    public ExpressionSyntax ParseOperation(){       
+    public ExpressionSyntax ParseFactor(){       
         var left = ParsePrimaryExpression();
         while (Current.Kind == SyntaxKind.MultiplyToken ||
                Current.Kind == SyntaxKind.DivideToken)
