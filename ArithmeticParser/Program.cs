@@ -4,7 +4,7 @@ using System.Linq;
 using Parser.CodeAnalysis;
 
 namespace ArithmeticParser
-{
+{   
     // the tree from the parse function will look like :
     // (1 + 2) * 3
     //            (
