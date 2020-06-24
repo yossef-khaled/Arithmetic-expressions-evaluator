@@ -17,7 +17,7 @@ namespace Parser.CodeAnalysis
 
         private float EvaluateExpression(ExpressionSyntax node){
             // We have (until now):
-            // BinaryExpresion, NumberExpression
+            // BinaryExpresion, NumberExpression, Parentheses
 
             if(node is NumberExpressionSyntax n){
                 return(int) n.NumberToken.Value;

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 
 namespace Parser.CodeAnalysis{
-class Lexer {
+    class Lexer {
     private readonly string _text;
     private int _position;
     private List<string> _diagnostics = new List<string>();

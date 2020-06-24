@@ -35,7 +35,7 @@ namespace ArithmeticParser
                     return;
                 }
 
-                var parser = new Parser(line);
+                var parser = new ParserImplementation(line);
                 var syntaxTree = parser.Parse();
                 var color = Console.ForegroundColor;
                 PrettyPrint(syntaxTree.Root);
@@ -43,6 +43,7 @@ namespace ArithmeticParser
                 if(!parser.Diagnostics.Any()){
                     var e = new Evaluator(syntaxTree.Root);
                     float result = e.Evaluate();
+                    Console.WriteLine(syntaxTree.Root);
                     Console.WriteLine(result);
                 }
                 else{

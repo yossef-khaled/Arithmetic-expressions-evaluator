@@ -3,12 +3,12 @@ using System.Collections.Generic;
 using System.Linq;
 
 namespace Parser.CodeAnalysis{
-class Parser {
+class ParserImplementation {
 
     private readonly SyntaxToken[] _tokens;
     private int _position;
     private List<string> _diagnostics => new List<string>();
-    public Parser(string text){        
+    public ParserImplementation(string text){        
         var tokens = new List<SyntaxToken>();
         var lexer = new Lexer(text);
         SyntaxToken token;
