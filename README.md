@@ -28,16 +28,16 @@ The following DFA represents the lexer, which accepts only these tokens :
 The parser is all about receiving an array of tokens from the lexer and then construct these tokens as 
 a tree of nodes. The parser is implemented in the Parser.cs file. 
 We used the following CFG (Context Free Grammer) to derive our expressions:
-      E → E + T | T
-      T → T * F | F
-      F → (E) | Number
+     - E → E + T | T
+     - T → T * F | F
+     - F → (E) | Number
 
 After converting the CFG to be LL(1) the following is our new grammer:
-      E → T E’
-      E’→ + T E’ | ε
-      T → F T’
-      T’→ *F T’ | ε
-      F → (E) | num
+     - E → T E’
+     - E’→ + T E’ | ε
+     - T → F T’
+     - T’→ *F T’ | ε
+     - F → (E) | num
 
 Computing the first and follow :
 ![Image of first and follow implementation](https://github.com/yossef-khaled/Arithmetic-expressions-evaluator/Images/FirstAndFollow.png)
