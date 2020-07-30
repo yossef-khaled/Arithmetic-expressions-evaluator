@@ -23,6 +23,7 @@ The lexer is implemented in the Lexer.cs file. It's all about divide the input s
 These tokens are later implemented as an enum in the SyntaxKind file.
 
 The following DFA represents the lexer, which accepts only these tokens :
+
 ![Image of the DFA](https://raw.githubusercontent.com/yossef-khaled/Arithmetic-expressions-evaluator/master/Images/DFA.PNG)
 
 
@@ -43,14 +44,17 @@ After converting the CFG to be LL(1) the following is our new grammer:
 - F → (E) | num
 
 Computing the first and follow :
+
 ![Image of first and follow implementation](https://raw.githubusercontent.com/yossef-khaled/Arithmetic-expressions-evaluator/master/Images/FirstAndFollow.PNG)
 
 Calculating parsing table :
-![Image of parsing table](https://raw.githubusercontent.com/yossef-khaled/Arithmetic-expressions-evaluator/master/Images/ParsingTable.png)
+
+![Image of parsing table](https://raw.githubusercontent.com/yossef-khaled/Arithmetic-expressions-evaluator/master/Images/ParsingTable.PNG)
 
 This “SyntaxTree” class represents the tree that the parser will return. It has a root, a list of diagnostics for errors, and an end of file.
 It will be something like this :
-![Image of the tree](https://raw.githubusercontent.com/yossef-khaled/Arithmetic-expressions-evaluator/master/Images/HierarchyTree.png)
+
+![Image of the tree](https://raw.githubusercontent.com/yossef-khaled/Arithmetic-expressions-evaluator/master/Images/HierarchyTree.PNG)
 
 > **Note:** the parser is using **recursive descent** to parse the stream input.
 
@@ -61,6 +65,7 @@ The evaluator is where we calculate the result starting from the tree. It takes 
 The evaluator is implemented in the Evaluator.cs file.
 
 At the end, "Pretty Print" function (which is not that pretty) will output the result and the tree into the console as follow:
-![Image of the output](https://raw.githubusercontent.com/yossef-khaled/Arithmetic-expressions-evaluator/master//Images/Output.png)
+
+![Image of the output](https://raw.githubusercontent.com/yossef-khaled/Arithmetic-expressions-evaluator/master/Images/Output.PNG)
 
 
