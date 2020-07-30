@@ -1,6 +1,6 @@
 # Arithmetic-expressions-evaluator
 
-A parser for the arithmetic exprissions using C# language. It consists of (as the main components): 
+A parser for the arithmetic expressions using C# language. It consists of (as the main components): 
 - Lexer.
 - Parser.
 - Evaluator.
@@ -43,11 +43,12 @@ After converting the CFG to be LL(1) the following is our new grammer:
 - T’→ *F T’ | ε
 - F → (E) | num
 
-Computing the first and follow :
+#### Computing the first and follow :
 
 ![Image of first and follow implementation](https://raw.githubusercontent.com/yossef-khaled/Arithmetic-expressions-evaluator/master/Images/FirstAndFollow.PNG)
 
-Calculating parsing table :
+
+#### Calculating parsing table :
 
 ![Image of parsing table](https://raw.githubusercontent.com/yossef-khaled/Arithmetic-expressions-evaluator/master/Images/ParsingTable.PNG)
 
