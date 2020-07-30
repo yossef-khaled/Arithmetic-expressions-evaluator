@@ -21,7 +21,7 @@ The lexer is implemented in the Lexer.cs file. It's all about divide the input s
 These tokens are later implemented as an enum in the SyntaxKind file.
 
 The following DFA represents the lexer, which accepts only these tokens :
-![Image of the DFA](https://github.com/yossef-khaled/Arithmetic-expressions-evaluator/Images/DFA.png)
+![Image of the DFA](DFA.png)
 
 
 ## Parser
@@ -49,7 +49,7 @@ This “SyntaxTree” class represents the tree that the parser will return. It 
 It will be something like this :
 ![Image of the tree](https://github.com/yossef-khaled/Arithmetic-expressions-evaluator/Images/HierarchyTree.png)
 
-### Note: the parser is using recursive descent to parse the stream input.
+#### Note: the parser is using recursive descent to parse the stream input.
 
 ## Evaluator
 The evaluator is where we calculate the result starting from the tree. It takes the root of the tree that the parser passes. It wlaks over all the nodes and when it arrive to the leaves of the tree, it calculates the result and go up tell it calculates htw wholw stream.
