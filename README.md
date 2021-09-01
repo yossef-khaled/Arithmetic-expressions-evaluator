@@ -8,7 +8,7 @@ A parser for the arithmetic expressions using C# language. It consists of (as th
 
 
 ## Lexer
-The lexer is implemented in the Lexer.cs file. It's all about divide the input stream into tokens, each is one type of the following tokens : 
+The lexer is implemented in the Lexer.cs file. It's all about dividing the input stream into tokens, each is one type of the following tokens : 
 - Numbers                        {0-9}*
 - Plus                           { + }
 - Minus                          { - }
@@ -62,10 +62,10 @@ It will be something like this :
 
 
 ## Evaluator
-The evaluator is where we calculate the result starting from the tree. It takes the root of the tree that the parser passes. It wlaks over all the nodes and when it arrive to the leaves of the tree, it calculates the result and go up tell it calculates htw wholw stream.
+The evaluator is where we calculate the result starting from the tree. It takes the root of the tree that the parser passes. It walks over all the nodes and when it reaches the leaves of the tree, it goes up the tree calculating the result till it goes through the whole stream.
 The evaluator is implemented in the Evaluator.cs file.
 
-At the end, "Pretty Print" function (which is not that pretty) will output the result and the tree into the console as follow:
+Finally, at the end, "Pretty Print" function (which is not that pretty) will output the result and the tree into the console as follow:
 
 ![The output](https://raw.githubusercontent.com/yossef-khaled/Arithmetic-expressions-evaluator/master/Images/Output.PNG)
 
